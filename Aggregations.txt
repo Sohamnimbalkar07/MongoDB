@@ -1,0 +1,89 @@
+Question 1. who has registered most recently?
+
+[
+  {
+    $sort: {
+      registered: 1,
+    },
+  },
+  {
+    $limit: 5,
+  },
+  {
+    $project: {
+      name: 1,
+      registered: 1,
+      favoriteFruit: 1,
+    },
+  },
+]
+
+Question 2. Categorize users by their favorite Fruit?
+
+[
+  {
+    $group: {
+      _id: "$favoriteFruit",
+      users: {
+        $push: "$name",
+      },
+    },
+  },
+]
+
+sample result set:
+
+[
+  {
+    "_id": "Apple",
+    "users": ["Alice", "Bob", "Charlie"]   //names of users
+  },
+  {
+    "_id": "Banana",
+    "users": ["David", "Eve"]
+  },
+  {
+    "_id": "Orange",
+    "users": ["Frank"]
+  }
+]
+
+Question 3. How many users have 'ad' as the second tag in their list of tags?
+
+[
+  {
+    $match: {
+      "tags.1": "ad",
+    },
+  },
+]
+
+Question 4. find users who have both 'enim' and 'id' as their tag.
+
+[
+  {
+    $match: {
+      tags: {
+        $all: ["enim", "id"],
+      },
+    },
+  },
+]
+
+Question 5. list all companies located in 'USA' with their corresponding user count.
+
+[
+  {
+    $match: {
+      "company.location.country": "USA",
+    },
+  },
+  {
+    $group: {
+      _id: "$company.title",
+      userCount: {
+        $sum: 1,
+      },
+    },
+  },
+]

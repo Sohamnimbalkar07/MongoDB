@@ -1,0 +1,63 @@
+Question 1. find average age of all users 
+
+when you specify _id: null within a $group stage, it means that you want to aggregate all documents 
+into a single group, ignoring any specific field values. This effectively treats all documents as 
+part of the same group, regardless of their values.
+
+[
+  {
+    $group: {
+      _id: null,
+      averageAge: {
+        $avg: "$age",
+      },
+    },
+  },
+]
+
+Question 2. find average age of male and females
+
+[
+  {
+    $group: {
+      _id: "$gender",
+      averageAge: {
+        $avg: "$age",
+      },
+    },
+  },
+] 
+
+Question 3. list of top 2 favorite fruits among all users
+
+count: { $sum: 1 }: This line instructs MongoDB to create a new field called "count" for each group 
+and use the $sum operator to increment the count by 1 for each document in the group. 
+$sum: 1: increase count by 1 for each document in the group. 
+if $sum: 2: increase count by 2 for each document in the group.
+
+$sort: {
+      count: -1,
+    }
+
+count is field we get after 1st stage.
+-1: for ascending order
+1: for descending order
+
+[
+  {
+    $group: {
+      _id: "$favoriteFruit",
+      count: {
+        $sum: 1,               
+      },
+    },
+  },
+  {
+    $sort: {
+      count: -1,
+    },
+  },
+  {
+    $limit: 2,
+  },
+]

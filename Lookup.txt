@@ -1,0 +1,53 @@
+Question 1. return all books with author details.
+
+Method 1:
+
+1st stage returns book with author_details but here data type of author_details is Array
+2nd stage is convert data type of author_details to object. 
+
+$addFields: {
+      author_details: {
+        $first: "$author_details",
+      },
+    },
+
+here we are adding new field named author-details and value of this field is first element
+of array named author-details
+
+[
+  {
+    $lookup: {
+      from: "authors",
+      localField: "author_id",
+      foreignField: "_id",
+      as: "author_details",
+    },
+  },
+  {
+    $addFields: {
+      author_details: {
+        $first: "$author_details",
+      },
+    },
+  },
+]
+
+Method 2:
+
+[
+  {
+    $lookup: {
+      from: "authors",
+      localField: "author_id",
+      foreignField: "_id",
+      as: "author_details",
+    },
+  },
+  {
+    $addFields: {
+      author_details: {
+        $arrayElemAt: ["$author_details", 0],
+      },
+    },
+  },
+]
